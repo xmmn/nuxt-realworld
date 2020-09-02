@@ -9,6 +9,7 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "dayjs": "^1.8.34",
     "element-ui": "^2.13.2",
     "nuxt": "^2.14.0"
   },
