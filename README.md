@@ -1,4 +1,9 @@
-# nuxt-realworld
+<div align="center">
+  <h1 align="center">nuxt-realworld</h1>
+</div>
+
+## Introduce
+This is a real world site based on nuxtjs. If you want to know more about real world, you can visit [https://github.com/gothinkster/realworld](https://github.com/gothinkster/realworld).
 
 ## Build Setup
 
