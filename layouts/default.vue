@@ -13,20 +13,24 @@
             style="border-bottom: 0px"
           >
             <el-menu-item index="/" style="border-bottom: 0px">Home</el-menu-item>
-            <el-menu-item index="/article/create" style="border-bottom: 0px">
-              <i class="el-icon-edit"></i>
-              <span slot="title">New Post</span>
-            </el-menu-item>
-            <el-menu-item index="/settings" style="border-bottom: 0px">
-              <i class="el-icon-setting"></i>
-              <span slot="title">Settings</span>
-            </el-menu-item>
-            <el-menu-item index="/login" style="border-bottom: 0px">Sign in</el-menu-item>
-            <el-menu-item index="/register" style="border-bottom: 0px">Sign up</el-menu-item>
+            <template v-if="hasLogin">
+              <el-menu-item index="/article/create" style="border-bottom: 0px">
+                <i class="el-icon-edit"></i>
+                <span slot="title">New Post</span>
+              </el-menu-item>
+              <el-menu-item index="/settings" style="border-bottom: 0px">
+                <i class="el-icon-setting"></i>
+                <span slot="title">Settings</span>
+              </el-menu-item>
+            </template>
+            <template v-else>
+              <el-menu-item index="/login" style="border-bottom: 0px">Sign in</el-menu-item>
+              <el-menu-item index="/register" style="border-bottom: 0px">Sign up</el-menu-item>
+            </template>
           </el-menu>
         </div>
-        <div>
-          <avator style="height: 100%"/>
+        <div v-if="hasLogin">
+          <avator style="height: 100%" />
         </div>
       </div>
     </el-header>

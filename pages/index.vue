@@ -7,29 +7,60 @@
       </div>
     </div>
     <div class="container">
-      <Logo />
-      <h1 class="title">Nuxt RealWorld</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >GitHub</a>
-      </div>
+      <el-row :gutter="20">
+        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
+          <article-item v-for="article in articles" :key="article.slug" :article="article" />
+        </el-col>
+        <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+          <el-tag class="article-tag" type="info" v-for="tag in top20Tags" :key="tag">{{tag}}</el-tag>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
 <script>
+import ArticleItem from '@/components/Article.vue'
+import { getAllArticles } from '@/api/article.js'
+import { getAllTags } from '@/api/tag.js'
+
+function getQueryParams(query) {
+  let { page = '1', limit = 10, tag } = query
+  return {
+    page: Number.parseInt(page),
+    limit,
+    tag,
+  }
+}
+
 export default {
   name: 'HomePage',
+  components: { ArticleItem },
+
+  async asyncData({ query }) {
+    const { page, limit, tag } = getQueryParams(query)
+    const [articleRes, tagRes] = await Promise.all([
+      getAllArticles({
+        offest: (page - 1) * limit,
+        limit,
+      }),
+      getAllTags(),
+    ])
+
+    const { articles, articlesCount } = articleRes.data
+    const { tags } = tagRes.data
+    return {
+      articles,
+      articlesCount,
+      tags,
+    }
+  },
+
+  computed: {
+    top20Tags() {
+      return this.tags.filter((t, index) => index < 20)
+    },
+  },
 }
 </script>
 
@@ -61,5 +92,11 @@ export default {
 
 .logo-font {
   font-family: 'Titillium Web', sans-serif;
+}
+
+.article-tag {
+  margin-right: 12px;
+  margin-top: 12px;
+  cursor: pointer;
 }
 </style>

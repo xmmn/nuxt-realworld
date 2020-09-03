@@ -37,7 +37,8 @@ export default {
   */
   plugins: [
     '@/plugins/element-ui',
-    '@/plugins/filters.js'
+    '@/plugins/filters.js',
+    '@/plugins/request.js'
   ],
   /*
   ** Auto import components
