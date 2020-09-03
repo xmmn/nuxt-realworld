@@ -10,9 +10,25 @@
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
           <article-item v-for="article in articles" :key="article.slug" :article="article" />
+          <div class="pagination">
+            <el-pagination
+              background
+              layout="prev, pager, next"
+              :current-page="page"
+              :page-size="limit"
+              :total="count"
+              @current-change="pageChange"
+            ></el-pagination>
+          </div>
         </el-col>
         <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
-          <el-tag class="article-tag" type="info" v-for="tag in top20Tags" :key="tag">{{tag}}</el-tag>
+          <el-tag
+            class="article-tag"
+            :type="t === tag ? 'success' : 'info'"
+            v-for="t in top20Tags"
+            :key="t"
+            @click="clickTag(t)"
+          >{{t}}</el-tag>
         </el-col>
       </el-row>
     </div>
@@ -36,6 +52,7 @@ function getQueryParams(query) {
 export default {
   name: 'HomePage',
   components: { ArticleItem },
+  watchQuery: ['page', 'tag', 'tab'],
 
   async asyncData({ query }) {
     const { page, limit, tag } = getQueryParams(query)
@@ -43,22 +60,47 @@ export default {
       getAllArticles({
         offest: (page - 1) * limit,
         limit,
+        tag,
       }),
       getAllTags(),
     ])
 
-    const { articles, articlesCount } = articleRes.data
+    const { articles, articlesCount: count } = articleRes.data
     const { tags } = tagRes.data
     return {
       articles,
-      articlesCount,
+      count,
       tags,
+
+      page,
+      limit,
+      tag,
     }
   },
 
   computed: {
     top20Tags() {
       return this.tags.filter((t, index) => index < 20)
+    },
+  },
+
+  methods: {
+    pageChange(currentPage) {
+      this.$router.push({
+        name: 'index',
+        query: {
+          page: currentPage,
+          tag: this.tag,
+        },
+      })
+    },
+    clickTag(tag) {
+      this.$router.push({
+        name: 'index',
+        query: {
+          tag: tag,
+        },
+      })
     },
   },
 }
@@ -98,5 +140,11 @@ export default {
   margin-right: 12px;
   margin-top: 12px;
   cursor: pointer;
+}
+
+.pagination {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: right;
 }
 </style>

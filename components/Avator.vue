@@ -1,11 +1,11 @@
 <template>
   <div class="avator">
-    <div class="col-center avator-image">
-      <el-avatar size="large" :src="image"></el-avatar>
+    <div class="col-center avator-image" @click="$router.push(`/profile/${username}`)">
+      <el-avatar size="large" :src="image" ></el-avatar>
     </div>
 
     <div class="avator-user-name">
-      <nuxt-link to>{{username}}</nuxt-link>
+      <nuxt-link :to="`/profile/${username}`">{{username}}</nuxt-link>
       <br />
       <span class="avator-date" v-if="date">{{date | format('MMMM DD, YYYY')}}</span>
     </div>

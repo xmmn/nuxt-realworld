@@ -22,8 +22,10 @@
         <el-button
           :plain="!article.favorited"
           size="medium"
+          :disabled="isFavoriting"
           icon="el-icon-star-on"
           type="success"
+          @click="triggerFavorited"
         >{{article.favoritesCount}}</el-button>
       </div>
     </div>
@@ -32,14 +34,47 @@
 
 <script>
 import Avator from './Avator.vue'
+import { favoriteArticle, unfavoriteArticle } from '@/api/article.js'
+import loginUserMixin from '@/mixins/loginUser.js'
 export default {
   name: 'ArticleItem',
   components: { Avator },
+  mixins: [loginUserMixin],
 
   props: {
     article: {
       type: Object,
       required: true,
+    },
+  },
+
+  data() {
+    return {
+      isFavoriting: false,
+    }
+  },
+
+  methods: {
+    async triggerFavorited() {
+
+      if (!this.hasLogin) {
+        return this.$router.push({
+          name: 'login',
+        })
+      }
+
+      this.isFavoriting = true
+      const request = this.article.favorited
+        ? unfavoriteArticle
+        : favoriteArticle
+
+      const { data } = await request(this.article.slug)
+      if (data) {
+        const { article } = data
+        this.article.favorited = article.favorited
+        this.article.favoritesCount = article.favoritesCount
+      }
+      this.isFavoriting = false
     },
   },
 }
