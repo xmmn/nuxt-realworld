@@ -9,7 +9,7 @@
             :image="article.author.image"
           />
         </div>
-        <div class="article-body">
+        <div class="article-body" @click="showDetails">
           <template v-if="article.title || article.description">
             <div class="article-title">{{article.title}}</div>
             <div class="article-description">{{article.description}}</div>
@@ -78,6 +78,10 @@ export default {
         this.article.favoritesCount = article.favoritesCount
       }
       this.isFavoriting = false
+    },
+
+    showDetails() {
+      this.$router.push(`/article/${this.article.slug}`)
     },
   },
 }

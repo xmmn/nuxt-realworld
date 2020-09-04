@@ -1,7 +1,13 @@
 <template>
   <div class="avator">
-    <div class="col-center avator-image" @click="$router.push(`/profile/${username}`)">
-      <el-avatar size="large" :src="image" ></el-avatar>
+    <div
+      class="col-center avator-image"
+      :class="{'avator-center': center}"
+      @click="$router.push(`/profile/${username}`)"
+    >
+      <el-avatar :size="size" :src="image" @error="errorHandler">
+        <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
+      </el-avatar>
     </div>
 
     <div class="avator-user-name">
@@ -29,6 +35,19 @@ export default {
       type: String,
       default: '',
     },
+    size: {
+      type: [Number, String],
+      default: 'large',
+    },
+    center: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    errorHandler() {
+      return true
+    },
   },
 }
 </script>
@@ -40,6 +59,10 @@ export default {
 
 .avator-image {
   cursor: pointer;
+}
+
+.avator-center {
+  margin: 0 auto;
 }
 
 .col-center {
