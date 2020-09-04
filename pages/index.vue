@@ -10,12 +10,15 @@
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
           <article-tab :tabs="tabs" :current="tab" @tab-change="tabChange" />
-          <article-item
-            v-for="(article, i) in articles"
-            :index="i"
-            :key="article.slug"
-            :article="article"
-          />
+          <div class="article-preview" v-if="!articles.length">No articles are here... yet.</div>
+          <template v-else>
+            <article-item
+              v-for="(article, i) in articles"
+              :index="i"
+              :key="article.slug"
+              :article="article"
+            />
+          </template>
           <div class="pagination">
             <el-pagination
               background
@@ -148,7 +151,6 @@ export default {
         },
       })
     },
-    
   },
 }
 </script>
