@@ -30,7 +30,7 @@
           </el-menu>
         </div>
         <div v-if="hasLogin">
-          <avator style="height: 100%" />
+          <avator style="height: 100%" :username="loginUser.username" :image="loginUser.image" />
         </div>
       </div>
     </el-header>
