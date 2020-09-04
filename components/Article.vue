@@ -1,5 +1,5 @@
 <template>
-  <div class="article-preview">
+  <div :class="{'article-preview': true, 'article-border': index !== 0}">
     <div class="article-meta">
       <div class="article-info">
         <div class="article-header">
@@ -46,6 +46,10 @@ export default {
       type: Object,
       required: true,
     },
+    index: {
+      type: Number,
+      default: -1,
+    },
   },
 
   data() {
@@ -56,7 +60,6 @@ export default {
 
   methods: {
     async triggerFavorited() {
-
       if (!this.hasLogin) {
         return this.$router.push({
           name: 'login',
@@ -82,8 +85,11 @@ export default {
 
 <style>
 .article-preview {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1.5rem 0;
+}
+
+.article-border {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .article-meta {

@@ -9,7 +9,13 @@
     <div class="container">
       <el-row :gutter="20">
         <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
-          <article-item v-for="article in articles" :key="article.slug" :article="article" />
+          <article-tab :tabs="tabs" :current="tab" @tab-change="tabChange" />
+          <article-item
+            v-for="(article, i) in articles"
+            :index="i"
+            :key="article.slug"
+            :article="article"
+          />
           <div class="pagination">
             <el-pagination
               background
@@ -37,27 +43,35 @@
 
 <script>
 import ArticleItem from '@/components/Article.vue'
-import { getAllArticles } from '@/api/article.js'
+import { getAllArticles, getFeedArticles } from '@/api/article.js'
 import { getAllTags } from '@/api/tag.js'
+import ArticleTab from '@/components/Tab.vue'
+import loginUserMixin from '@/mixins/loginUser.js'
 
 function getQueryParams(query) {
-  let { page = '1', limit = 10, tag } = query
+  let { page = '1', limit = 10, tag, tab = 'global_feed' } = query
+  if (tag) {
+    tab = tag
+  }
   return {
     page: Number.parseInt(page),
     limit,
     tag,
+    tab,
   }
 }
 
 export default {
   name: 'HomePage',
-  components: { ArticleItem },
+  components: { ArticleItem, ArticleTab },
   watchQuery: ['page', 'tag', 'tab'],
+  mixins: [loginUserMixin],
 
   async asyncData({ query }) {
-    const { page, limit, tag } = getQueryParams(query)
+    const { page, limit, tag, tab } = getQueryParams(query)
+    const feedRequest = tab === 'your_feed' ? getFeedArticles : getAllArticles
     const [articleRes, tagRes] = await Promise.all([
-      getAllArticles({
+      feedRequest({
         offest: (page - 1) * limit,
         limit,
         tag,
@@ -75,12 +89,34 @@ export default {
       page,
       limit,
       tag,
+      tab,
     }
   },
 
   computed: {
     top20Tags() {
       return this.tags.filter((t, index) => index < 20)
+    },
+    tabs() {
+      let tabs = []
+      if (this.hasLogin) {
+        tabs.push({
+          label: 'Your Feed',
+          key: 'your_feed',
+        })
+      }
+      tabs.push({
+        label: 'Global Feed',
+        key: 'global_feed',
+      })
+
+      if (this.tag) {
+        tabs.push({
+          label: `# ${this.tag}`,
+          key: this.tag,
+        })
+      }
+      return tabs
     },
   },
 
@@ -91,6 +127,7 @@ export default {
         query: {
           page: currentPage,
           tag: this.tag,
+          tab: this.tab,
         },
       })
     },
@@ -99,6 +136,15 @@ export default {
         name: 'index',
         query: {
           tag: tag,
+        },
+      })
+    },
+
+    tabChange(tab) {
+      this.$router.push({
+        name: 'index',
+        query: {
+          tab: tab,
         },
       })
     },
