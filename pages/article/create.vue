@@ -19,7 +19,11 @@
             <el-input v-model="form.title" :disabled="insertArticle" placeholder="Article Title"></el-input>
           </el-form-item>
           <el-form-item prop="description">
-            <el-input v-model="form.description" :disabled="insertArticle" placeholder="What's this article about?"></el-input>
+            <el-input
+              v-model="form.description"
+              :disabled="insertArticle"
+              placeholder="What's this article about?"
+            ></el-input>
           </el-form-item>
           <el-form-item prop="body">
             <el-input
@@ -31,7 +35,12 @@
             ></el-input>
           </el-form-item>
           <el-form-item prop="tag">
-            <el-input v-model="tag" :disabled="insertArticle" placeholder="Enter tags" @change="addTag"></el-input>
+            <el-input
+              v-model="tag"
+              :disabled="insertArticle"
+              placeholder="Enter tags"
+              @change="addTag"
+            ></el-input>
             <el-tag
               class="article-tag"
               type="info"
@@ -54,7 +63,7 @@
 import { addArticle } from '@/api/article.js'
 export default {
   name: 'CreatePage',
-
+  middleware: 'notAuthenticated',
   data() {
     return {
       form: {

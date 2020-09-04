@@ -40,14 +40,19 @@
             <el-input v-model="form.email" :disabled="isUpdating" placeholder="Email"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" v-model="form.password" :disabled="isUpdating" placeholder="Password"></el-input>
+            <el-input
+              type="password"
+              v-model="form.password"
+              :disabled="isUpdating"
+              placeholder="Password"
+            ></el-input>
           </el-form-item>
         </el-form>
         <div class="setting-operate">
           <el-button type="primary" @click="submit">Update Settings</el-button>
         </div>
 
-        <hr  style="margin-top: 16px; margin-bottom: 16px;"/>
+        <hr style="margin-top: 16px; margin-bottom: 16px;" />
 
         <el-button type="danger" plain size="mini">Or click here to logout.</el-button>
       </el-col>
@@ -59,7 +64,7 @@
 import { updateUser } from '@/api/user.js'
 export default {
   name: 'SettingsPage',
-
+  middleware: 'notAuthenticated',
   asyncData({ store }) {
     const user = store.state.loginUser
     return {
@@ -104,7 +109,7 @@ export default {
     logout() {
       this.$store.commit('set_login_user', null)
       this.$router.push({
-        name: 'login'
+        name: 'login',
       })
     },
   },
