@@ -22,7 +22,7 @@
             <el-input v-model="form.email" placeholder="Email"></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="form.password" placeholder="Password"></el-input>
+            <el-input v-model="form.password" type="password" placeholder="Password"></el-input>
           </el-form-item>
         </el-form>
         <div class="login-operate">
